@@ -12,8 +12,9 @@ public class Main {
         printPresentEmployees(employees);
         printNotPresentEmployees(employees);
         searchByLastName(employees, "Smith");
-        saveEmployeesToFile(employees, "employees.txt");
-        ArrayList<Employee> result = loadEmployeesFromFile("employees.txt");
+        String dataFile = "employees.dat";
+        saveEmployeesToFile(employees, dataFile);
+        ArrayList<Employee> result = loadEmployeesFromFile(dataFile);
         if (result != null && result.size() > 0) {
             result.add(new Employee("Fiona", "Executive", "Management", 11));
             result.add(new Employee("Fiona", "Specialist", "Customer Service", 12));
