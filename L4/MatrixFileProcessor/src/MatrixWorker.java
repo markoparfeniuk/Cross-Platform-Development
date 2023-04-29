@@ -44,7 +44,7 @@ public class MatrixWorker {
         }
         return outputMatrix;
     }
-    public static void writeMatrixToFile(int[][] matrix, String fileName) {
+    public static void writeMatrixToFile(int[][] matrix, String fileName) throws FileNotFoundException {
         if (matrix == null || matrix.length != 5) {
             throw new IllegalArgumentException("Invalid matrix");
         }
