@@ -53,16 +53,6 @@ public class EmployeeManagement extends Application {
         TextField lastEntryExitTimeField = new TextField();
         lastEntryExitTimeField.setPromptText("Last Entry/Exit Time");
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem removeItem = new MenuItem("Remove");
-        removeItem.setOnAction(e -> {
-            // Remove selected employee from list
-            Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-            employees.remove(selectedEmployee);
-        });
-        contextMenu.getItems().add(removeItem);
-        employeeListView.setContextMenu(contextMenu);
-
         Button addButton = new Button("Add Employee");
         addButton.setOnAction(event -> {
             // Add employee to list
@@ -83,6 +73,32 @@ public class EmployeeManagement extends Application {
             badgeNumberField.clear();
             isPresentCheckBox.setSelected(false);
             lastEntryExitTimeField.clear();
+        });
+        
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem removeItem = new MenuItem("Remove");
+        removeItem.setOnAction(e -> {
+            // Remove selected employee from list
+            Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+            employees.remove(selectedEmployee);
+        });
+        contextMenu.getItems().add(removeItem);
+        employeeListView.setContextMenu(contextMenu);
+
+        Button sortButton = new Button("Sort by Last Name");
+        sortButton.setOnAction(event -> {
+            // Sort employees by last name
+            Comparator<Employee> comparator;
+            if (sortAscending) {
+                comparator = Comparator.comparing(Employee::getLastName);
+                sortAscending = false;
+                sortButton.setText("Sort by Last Name (Descending)");
+            } else {
+                comparator = Comparator.comparing(Employee::getLastName).reversed();
+                sortAscending = true;
+                sortButton.setText("Sort by Last Name (Ascending)");
+            }
+            sortedEmployees.setComparator(comparator);
         });
 
         Button saveButton = new Button("Save Employees to File");
@@ -115,22 +131,6 @@ public class EmployeeManagement extends Application {
             }
         });
 
-        Button sortButton = new Button("Sort by Last Name");
-        sortButton.setOnAction(event -> {
-            // Sort employees by last name
-            Comparator<Employee> comparator;
-            if (sortAscending) {
-                comparator = Comparator.comparing(Employee::getLastName);
-                sortAscending = false;
-                sortButton.setText("Sort by Last Name (Descending)");
-            } else {
-                comparator = Comparator.comparing(Employee::getLastName).reversed();
-                sortAscending = true;
-                sortButton.setText("Sort by Last Name (Ascending)");
-            }
-            sortedEmployees.setComparator(comparator);
-        });
-
         ToggleGroup presentToggleGroup = new ToggleGroup();
         RadioButton allRadioButton = new RadioButton("All");
         allRadioButton.setToggleGroup(presentToggleGroup);
@@ -151,10 +151,17 @@ public class EmployeeManagement extends Application {
             }
         });
 
-        HBox dataHBox = new HBox(10, loadButton, saveButton); dataHBox.setSpacing(10); dataHBox.setAlignment(Pos.CENTER); dataHBox.setPadding(new Insets(10));
-        HBox presentHBox = new HBox(10, allRadioButton, presentRadioButton, notPresentRadioButton, sortButton); presentHBox.setSpacing(10); presentHBox.setPadding(new Insets(10));
+        HBox dataHBox = new HBox(10, loadButton, saveButton);
+        dataHBox.setSpacing(10);
+        dataHBox.setAlignment(Pos.CENTER);
+        dataHBox.setPadding(new Insets(10));
+        
+        HBox presentHBox = new HBox(10, allRadioButton, presentRadioButton, notPresentRadioButton, sortButton); presentHBox.setSpacing(10);
+        presentHBox.setPadding(new Insets(10));
         presentHBox.setAlignment(Pos.CENTER);
+        
         VBox tableVBox = new VBox(searchField, presentHBox, employeeListView);
+        
         VBox newRecordVBox = new VBox(lastNameField, positionField, departmentField, badgeNumberField, isPresentCheckBox, lastEntryExitTimeField, addButton);
         newRecordVBox.setSpacing(10);
         newRecordVBox.setAlignment(Pos.CENTER);
